@@ -1,29 +1,10 @@
 import turtle
+import time
 
-
-def point(x, y):
-    h = turtle.Turtle()
-    h.penup()
-    h.color("green")
-    h.shape("square")
-    h.goto(x, y)
-    return x, y
-
-
-def screen(x, y):
-    k = (x * 580) / 2
-    l = (y * 580) / 2
-    return k, l
-
-
-def project(x, y, z):
-    k = x/z
-    l = y/z
-    return k, l
-
-def frame():
-    s.tracer(1)
-    point(*screen(*project(0, 0, 2)))
+# variables
+FPS = 30
+dt = 1/FPS
+dz = 0
 
 
 # setting screen
@@ -32,7 +13,39 @@ s.bgcolor("black")
 s.setup(width=600, height=600)
 s.tracer(0)
 
-# main loop
+# header
+h = turtle.Turtle()
+h.penup()
+h.color("green")
+h.shape("square")
+h.speed(0)
+
+# 3d cordinates
+var = [
+    (0.5, 0, 1)
+    (-0.5, 0, 1)
+    (0.5, 0, 2)
+    (-0.5, 0, 2)
+]
+
+# fonctions
+
+
+def project(x, y, z):
+    k = (190 * x) / z
+    l = (190 * y)/z
+    return k, l
+
+
+def frame():
+    global dz
+    dz += 1 * dt
+    h.clear()
+
+    cord = project(0.5, 0, 1 + dz)
+
 
 s.update()
-turtle.done()
+s.ontimer(frame, int(1000/FPS))
+
+turtle.exitonclick()
