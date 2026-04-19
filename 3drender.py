@@ -34,6 +34,22 @@ var = [
 ]
 
 # fonctions
+def line():
+    for x, y, z in var:
+        for k, l, m in var:
+            h.goto(*project(x, y, z + 1))
+            if x != k and y == l and z == m :
+                h.pendown()
+                h.goto(*project(k, l , m + 1))
+                h.penup()
+            elif x == k and y != l and z == m:
+                h.pendown()
+                h.goto(*project(k,l,m+1))
+                h.penup()
+            elif x == k and y == l and z != m:
+                h.pendown()
+                h.goto(*project(k, l , m + 1))
+                h.penup()
 
 
 def project(x, y, z):
@@ -46,7 +62,6 @@ def translate_z():
     h.clear()
     for x, y, z in var:
         h.goto(*project(x, y, z + dz))
-        h.pendown()
 
 
 def frame():
@@ -56,8 +71,8 @@ def frame():
     s.ontimer(frame, int(100/FPS))
     s.update()
 
-
+line()
 s.update()
-s.ontimer(frame, int(100/FPS))
+# s.ontimer(frame, int(100/FPS))
 
 turtle.exitonclick()
