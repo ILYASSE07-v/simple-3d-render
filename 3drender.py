@@ -23,56 +23,59 @@ h.speed(0)
 
 # 3d cordinates
 var = [
+    # cube
+    (1, 1, 0),
+    (1, -1, 0),
+    (-1, -1, 0),
+    (-1, 1, 0),
     (1, 1, 1),
     (1, -1, 1),
-    (1, -1, 2),
-    (1, 1, 2),
-    (-1, 1, 1),
     (-1, -1, 1),
-    (-1, -1, 2),
-    (-1, 1, 2)
+    (-1, 1, 1)
 ]
-
+edge = [
+        #cube
+        #back
+        (0,1),(1,2),(2,3),(3,0),
+        #front
+        (4,5),(5,6),(6,7),(7,4),
+        #sides
+        (0,4),(1,5),(2,6),(3,7)
+ ]
 # fonctions
+
+
 def line():
-    for x, y, z in var:
-        for k, l, m in var:
-            h.goto(*project(x, y, z + 1))
-            if x != k and y == l and z == m :
-                h.pendown()
-                h.goto(*project(k, l , m + 1))
-                h.penup()
-            elif x == k and y != l and z == m:
-                h.pendown()
-                h.goto(*project(k,l,m+1))
-                h.penup()
-            elif x == k and y == l and z != m:
-                h.pendown()
-                h.goto(*project(k, l , m + 1))
-                h.penup()
+    for start, end in edge:
+        x = var[start]
+        y = var[end]
+        h.goto(project(*x))
+        h.pendown()
+        h.goto(project(*y))
+        h.penup()
 
 
 def project(x, y, z):
-    k = (190 * x) / z
-    l = (190 * y)/z
+    k = (190 * x) / (abs(z) + 1)
+    l = (190 * y) / (abs(z) + 1)
     return k, l
 
 
-def translate_z():
+def translate_z(x, y, z):
+
     h.clear()
-    for x, y, z in var:
-        h.goto(*project(x, y, z + dz))
 
 
 def frame():
     global dz
     dz += 1 * dt
     translate_z()
-    s.ontimer(frame, int(100/FPS))
+
+    s.ontimer(frame, int(1000/FPS))
     s.update()
+
 
 line()
 s.update()
-# s.ontimer(frame, int(100/FPS))
-
+# s.ontimer(frame, int(1000/FPS))
 turtle.exitonclick()
