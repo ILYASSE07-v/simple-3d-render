@@ -33,22 +33,23 @@ var = [
     (-1, -1, 1),
     (-1, 1, 1)
 ]
+tempvar = []
 edge = [
-        #cube
-        #back
-        (0,1),(1,2),(2,3),(3,0),
-        #front
-        (4,5),(5,6),(6,7),(7,4),
-        #sides
-        (0,4),(1,5),(2,6),(3,7)
- ]
+    # cube
+    # back
+    (0, 1), (1, 2), (2, 3), (3, 0),
+    # front
+    (4, 5), (5, 6), (6, 7), (7, 4),
+    # sides
+    (0, 4), (1, 5), (2, 6), (3, 7)
+]
 # fonctions
 
 
 def line():
     for start, end in edge:
-        x = var[start]
-        y = var[end]
+        x = tempvar[start]
+        y = tempvar[end]
         h.goto(project(*x))
         h.pendown()
         h.goto(project(*y))
@@ -56,26 +57,29 @@ def line():
 
 
 def project(x, y, z):
-    k = (190 * x) / (abs(z) + 1)
-    l = (190 * y) / (abs(z) + 1)
+    k = (200 * x) / z + 1
+    l = (200 * y) / z + 1
     return k, l
 
 
-def translate_z(x, y, z):
-
+def translate_z():
     h.clear()
+    tempvar.clear()
+    for x, y, z in var:
+        x = x
+        y = y
+        z += dz
+        tempvar.append((x, y, z))
 
 
 def frame():
     global dz
     dz += 1 * dt
     translate_z()
-
+    line()
     s.ontimer(frame, int(1000/FPS))
     s.update()
 
 
-line()
-s.update()
-# s.ontimer(frame, int(1000/FPS))
+s.ontimer(frame, int(1000/FPS))
 turtle.exitonclick()
