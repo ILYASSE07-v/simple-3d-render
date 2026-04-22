@@ -1,16 +1,12 @@
 import turtle
-import time
 import math
 
 # variables
 FPS = 60
 dt = 1/FPS
-dz = 0
-dy = 0
-dx = 0
-doy = 0
-dox = 0
-doz = 0
+dd = 0
+do = 0
+
 
 # setting screen
 s = turtle.Screen()
@@ -68,70 +64,51 @@ def project(x, y, z):
     return k, l
 
 
-def rotate_y():
+def rotate(o, p, n):
+    c = math.cos(do)
+    s = math.sin(do)
     h.clear()
     tempvar.clear()
     for x, y, z in var:
-        x_n = x * math.cos(doy) + z * math.sin(doy)
-        z_n = -x * math.sin(doy) + z * math.cos(doy)
-        y = y
-        tempvar.append((x_n, y, z_n))
-
-
-def rotate_x():
-    h.clear()
-    tempvar.clear()
-    for x, y, z in var:
-        x = x
-        y_n = y * math.cos(dox) - z * math.sin(dox)
-        z_n = y * math.sin(dox) + z * math.cos(dox)
-        tempvar.append((x, y_n, z_n))
-
-def rotate_z():
-    h.clear()
-    tempvar.clear()
-    for x,y,z in var:
-        z = z
-        x_n = x * math.cos(doz) -y * math.sin(doz)
-        y_n = x * math.sin(doz) + y *math.cos(doz)
-        tempvar.append((x_n,y_n,z))
-
-def translate_z():
-    h.clear()
-    tempvar.clear()
-    for x, y, z in var:
-        z += dz
+        if o:
+            yn = y * c - z * s
+            zn = y * s + z * c
+            y, z = yn, zn
+        if p:
+            xn = x * c + z * s
+            zn = -x * s + z * c
+            x, z = xn, zn
+        if n:
+            xn = x * c - y * s
+            yn = x * s + y * c
+            x, y = xn, yn
         tempvar.append((x, y, z))
 
-def translate_x():
-    h.clear()
-    tempvar.clear()
-    for x,y,z in var:
-        x += dx
-        tempvar.append((x,y,z))
 
-def translate_y():
+def translate(o, p, n):
     h.clear()
     tempvar.clear()
-    for x,y,z in var:
-        y += dy
-        tempvar.append((x,y,z))
+    for x, y, z in var:
+        if o == True:
+            x += dd
+        if p == True:
+            y += dd
+        if n == True:
+            z += dd
+        tempvar.append((x, y, z))
+
 
 def frame():
-    global dz
-    global dy
-    global dx
-    global doy
-    global dox
-    global doz
-    doz += 2 * math.pi * dt
-    dox += 2 * math.pi * dt
-    doy += 2 * math.pi * dt
-    dz += 1 * dt
-    dx +=1 * dt % 1
-    dy += 1* dt % 1
+    global dd, do
+    p = 1
+    if p == True:
+        do += 2 * math.pi * dt
+        dd += 1 * dt
+    else:
+        do -= 2 * math.pi * dt
+        dd -= 1 * dt
     h.clear()
-    translate_y()
+    rotate(1, 1, 1)
     line()
     s.ontimer(frame, int(1000/FPS))
     s.update()
