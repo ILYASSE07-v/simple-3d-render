@@ -6,7 +6,11 @@ import math
 FPS = 60
 dt = 1/FPS
 dz = 0
+dy = 0
+dx = 0
 doy = 0
+dox = 0
+doz = 0
 
 # setting screen
 s = turtle.Screen()
@@ -69,30 +73,65 @@ def rotate_y():
     tempvar.clear()
     for x, y, z in var:
         x_n = x * math.cos(doy) + z * math.sin(doy)
-        z_n = -x * math.sin(doy) + z * math.cos(doy) 
+        z_n = -x * math.sin(doy) + z * math.cos(doy)
         y = y
         tempvar.append((x_n, y, z_n))
 
+
+def rotate_x():
+    h.clear()
+    tempvar.clear()
+    for x, y, z in var:
+        x = x
+        y_n = y * math.cos(dox) - z * math.sin(dox)
+        z_n = y * math.sin(dox) + z * math.cos(dox)
+        tempvar.append((x, y_n, z_n))
+
+def rotate_z():
+    h.clear()
+    tempvar.clear()
+    for x,y,z in var:
+        z = z
+        x_n = x * math.cos(doz) -y * math.sin(doz)
+        y_n = x * math.sin(doz) + y *math.cos(doz)
+        tempvar.append((x_n,y_n,z))
 
 def translate_z():
     h.clear()
     tempvar.clear()
     for x, y, z in var:
-        x = x
-        y = y
         z += dz
         tempvar.append((x, y, z))
 
+def translate_x():
+    h.clear()
+    tempvar.clear()
+    for x,y,z in var:
+        x += dx
+        tempvar.append((x,y,z))
+
+def translate_y():
+    h.clear()
+    tempvar.clear()
+    for x,y,z in var:
+        y += dy
+        tempvar.append((x,y,z))
 
 def frame():
     global dz
+    global dy
+    global dx
     global doy
+    global dox
+    global doz
+    doz += 2 * math.pi * dt
+    dox += 2 * math.pi * dt
     doy += 2 * math.pi * dt
     dz += 1 * dt
+    dx +=1 * dt % 1
+    dy += 1* dt % 1
     h.clear()
-    # translate_z()
-    rotate_y()
-    print(tempvar)
+    translate_y()
     line()
     s.ontimer(frame, int(1000/FPS))
     s.update()
