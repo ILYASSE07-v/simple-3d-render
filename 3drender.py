@@ -19,6 +19,7 @@ h = turtle.Turtle()
 h.hideturtle()
 h.pencolor("green")
 h.penup()
+h.pensize(2)
 h.shape("square")
 h.speed(0)
 
@@ -58,7 +59,7 @@ def line():
 
 
 def project(x, y, z):
-    factor = 300/(z + 5)
+    factor = 300/(z + 4)
     k = x * factor
     l = y * factor
     return k, l
@@ -67,7 +68,6 @@ def project(x, y, z):
 def rotate(o, p, n):
     c = math.cos(do)
     s = math.sin(do)
-    h.clear()
     tempvar.clear()
     for x, y, z in var:
         if o:
@@ -83,33 +83,44 @@ def rotate(o, p, n):
             yn = x * s + y * c
             x, y = xn, yn
         tempvar.append((x, y, z))
+    line()
 
 
-def translate(o, p, n):
-    h.clear()
+def translate(o, p, n, pos):
     tempvar.clear()
-    for x, y, z in var:
-        if o == True:
-            x += dd
-        if p == True:
-            y += dd
-        if n == True:
-            z += dd
-        tempvar.append((x, y, z))
+    if pos:
+        for x, y, z in var:
+            if o:
+                x += dd % 3
+            if p == True:
+                y += dd % 3
+            if n == True:
+                z += dd % 3
+            tempvar.append((x, y, z))
+    else:
+        for x, y, z in var:
+            if o:
+                x -= dd % 3
+            if p == True:
+                y -= dd % 3
+            if n == True:
+                z -= dd % 3
+            tempvar.append((x, y, z))
+    line()
 
 
 def frame():
+    # s.listen()
     global dd, do
-    p = 1
-    if p == True:
-        do += 2 * math.pi * dt
-        dd += 1 * dt
-    else:
-        do -= 2 * math.pi * dt
-        dd -= 1 * dt
+
+    do += 2 * math.pi * dt
+    dd += 1 * dt
+
+    # s.onkeypress(lambda: translate(0, 0, 1), "z")
+    # s.onkeypress(lambda: translate(0, 1, 0), "y")
+    # s.onkeypress(lambda: translate(1, 0, 0), "x")
     h.clear()
-    rotate(1, 1, 1)
-    line()
+    translate(1, 0, 0, 0)
     s.ontimer(frame, int(1000/FPS))
     s.update()
 
