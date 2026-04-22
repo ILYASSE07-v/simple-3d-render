@@ -25,10 +25,10 @@ h.speed(0)
 # 3d cordinates
 var = [
     # cube
-    (1, 1, 0),
-    (1, -1, 0),
-    (-1, -1, 0),
-    (-1, 1, 0),
+    (1, 1, -1),
+    (1, -1, -1),
+    (-1, -1, -1),
+    (-1, 1, -1),
     (1, 1, 1),
     (1, -1, 1),
     (-1, -1, 1),
@@ -58,21 +58,20 @@ def line():
 
 
 def project(x, y, z):
-    k = (200 * x) / z 
-    l = (200 * y) / z 
+    factor = 300/(z + 5)
+    k = x * factor
+    l = y * factor
     return k, l
 
 
-def roate_y():
+def rotate_y():
     h.clear()
     tempvar.clear()
     for x, y, z in var:
-        s = math.sin(doy)
-        c = math.cos(doy)
-        x = x*c - z*s
-        z = x*c + z*s
+        x_n = x * math.cos(doy) + z * math.sin(doy)
+        z_n = -x * math.sin(doy) + z * math.cos(doy) 
         y = y
-        tempvar.append((x, y, z))
+        tempvar.append((x_n, y, z_n))
 
 
 def translate_z():
@@ -88,10 +87,12 @@ def translate_z():
 def frame():
     global dz
     global doy
-    doy = 2 * math.pi * dt
+    doy += 2 * math.pi * dt
     dz += 1 * dt
+    h.clear()
     # translate_z()
-    roate_y()
+    rotate_y()
+    print(tempvar)
     line()
     s.ontimer(frame, int(1000/FPS))
     s.update()
